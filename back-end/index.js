@@ -33,7 +33,6 @@ function syntaxOfTweet(tweetText) {
 //Ballenas, delfines y marsopas tienen un comportamiento casi humano. Las pruebas, aquí:  \nhttps://t.co/DCmlYodKeS… https://t.co/7hCmciTYUk
 
 function normaliseTweet(tweetObj) {
-  
   let tweet = '';
   const tweetText = tweetObj.text;
   const tweetLinks = tweetObj.entities.urls;
@@ -44,6 +43,8 @@ function normaliseTweet(tweetObj) {
     else if(i === tweetLinks.length - 1) tweet += tweetText.slice(tweetLinks[i].indices[1], tweetText.length)
     else tweet += tweetText.slice(tweetLinks[i].indices[1], tweetLinks[i+1].indices[0])
   }
+
+  if(tweet.length === 0) tweet = tweetText;
 
   return tweet.split(' ').filter((word) => {
     return !word.includes('#') && !word.includes('@') ? true : false;

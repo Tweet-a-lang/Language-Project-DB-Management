@@ -35,7 +35,7 @@ describe('#syntaxOfTweet', () => {
     })
 });
 
-describe('#normaliseTweet', () => {
+describe.only('#normaliseTweet', () => {
     it('is a function', () => {
         expect(normaliseTweet).to.be.a('function');
     });
@@ -44,6 +44,11 @@ describe('#normaliseTweet', () => {
         const testTweet = exampleTweets[0];
         const answer = 'Ballenas, delfines y marsopas tienen un comportamiento casi humano. Las pruebas, aquí:';
         expect(normaliseTweet(testTweet)).to.equal(answer);
+    })
+    it('should return a string when there are no links in the tweet', () => {
+        const testTweet = exampleTweets[0];
+        testTweet.entities.urls = [];
+        expect(normaliseTweet(testTweet)).to.equal(testTweet.text)
     })
 });
 
@@ -113,7 +118,7 @@ describe('#randomWords', () => {
     });
 });
 
-describe.only('#pickCorrectWord', () => {
+describe('#pickCorrectWord', () => {
     it('returns an object with correct word and an array of choices', () => {
         const tweet = exampleTweets[0]
         return pickCorrectWord(tweet, 'ADJ')
