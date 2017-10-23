@@ -5,6 +5,7 @@ const LanguageServiceClient = require('@google-cloud/language')
 
 const language = new LanguageServiceClient();
 const translate = require('@google-cloud/translate')();
+const ranWords = require('random-words');
 
 
 function syntaxOfTweet(tweetText) {
@@ -63,4 +64,34 @@ function translateWord(word) {
   })
   .catch(console.error)
 }
-module.exports = { syntaxOfTweet, normaliseTweet, selectWordType, translateWord };
+
+function randomWords(num) {
+  return ranWords(num);
+}
+
+
+function pickCorrectWord (tweet, type) {
+  const finalResult = {}
+  return syntaxOfTweet(normaliseTweet(tweet))
+          .then(arr => {
+            return selectWordType(arr, type)
+          })
+          .then(word => {
+            finalResult.chosenWord = word
+            return translateWord(word)
+          })
+          .then(translatedWord => {
+            finalResult.translatedWord = translatedWord;
+            let choices = []; choices.length = 4;
+            for (let i = 0; i < choices.length; i++) {
+              if(i === 0) choices[i] = {text: translatedWord, result: true}
+              else choices[i] = {text: ranWords(), result: false}
+            }
+            finalResult.choices = choices;
+            return finalResult;
+          })
+        
+}
+
+
+module.exports = { syntaxOfTweet, normaliseTweet, selectWordType, translateWord, randomWords, pickCorrectWord };

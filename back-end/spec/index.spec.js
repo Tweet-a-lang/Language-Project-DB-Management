@@ -1,6 +1,7 @@
 const {expect} = require('chai');
-const {syntaxOfTweet, normaliseTweet, selectWordType, translateWord} = require('../index.js');
+const {syntaxOfTweet, normaliseTweet, selectWordType, translateWord, randomWords, pickCorrectWord} = require('../index.js');
 const exampleTweets = require('../exampleTweets.json');
+const _ = require('underscore')
 
 const text = exampleTweets[0].text;//Math.floor(Math.random() * exampleTweets.length)].text;
 const exampleWordTypes = 
@@ -84,11 +85,11 @@ describe('#translateWord', () => {
         .then((word) => {
             console.log(word)
             expect(word).to.equal('game')
-        })
-    })
-})
+        });
+    });
+});
 
-describe.only('#normaliseTweet => #syntaxOfTweet => #selectWordType => #translateWord', () => {
+describe('#normaliseTweet => #syntaxOfTweet => #selectWordType => #translateWord', () => {
     it('it returns a string', () => {
         const filteredTweet = normaliseTweet(exampleTweets[0]);
         return syntaxOfTweet(filteredTweet)
@@ -99,11 +100,32 @@ describe.only('#normaliseTweet => #syntaxOfTweet => #selectWordType => #translat
                 return translateWord(str)
             })
             .then(result => {
-                expect(result).to.equal('hooman')
+                expect(result).to.equal('human')
             })
-    })
-})
+    });
+});
 
+describe('#randomWords', () => {
+    it('it returns an array', () => {
+        const result = randomWords(5);
+        expect(result).to.be.a('array');
+        expect(result.length).to.equal(5);
+    });
+});
+
+describe.only('#pickCorrectWord', () => {
+    it('returns an object with correct word and an array of choices', () => {
+        const tweet = exampleTweets[0]
+        return pickCorrectWord(tweet, 'ADJ')
+        .then(choices => {
+            expect(choices).to.be.a('object')
+            expect(choices.chosenWord).to.be.a('string')
+            expect(choices.chosenWord).to.equal('humano')
+            expect(choices.translatedWord).to.be.a('string')
+            expect(choices.translatedWord).to.equal('human')
+        })
+    });
+});
 //To Do's
 
 //word, word 
