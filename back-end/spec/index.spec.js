@@ -1,5 +1,5 @@
 const {expect} = require('chai');
-const {syntaxOfTweet, normaliseTweet, selectWordType} = require('../index.js');
+const {syntaxOfTweet, normaliseTweet, selectWordType, translateWord} = require('../index.js');
 const exampleTweets = require('../exampleTweets.json');
 
 const text = exampleTweets[0].text;//Math.floor(Math.random() * exampleTweets.length)].text;
@@ -27,7 +27,7 @@ describe('#syntaxOfTweet', () => {
     });
 
     it('returns an array of words and their type', () => {
-        syntaxOfTweet(text)
+        return syntaxOfTweet(text)
             .then(answer => {
                 expect(answer).to.be.a('array');
             })
@@ -41,27 +41,69 @@ describe('#normaliseTweet', () => {
 
     it('should loop through tweetObj and remove links', () => {
         const testTweet = exampleTweets[0];
-        expect(normaliseTweet(testTweet)).to.equal('Ballenas, delfines y marsopas tienen un comportamiento casi humano. Las pruebas, aquí:');
+        const answer = 'Ballenas, delfines y marsopas tienen un comportamiento casi humano. Las pruebas, aquí:';
+        expect(normaliseTweet(testTweet)).to.equal(answer);
     })
 });
 
 describe('#normaliseTweet => #syntaxOfTweet', () => {
     it('should return an array', () => {
         const filteredTweet = normaliseTweet(exampleTweets[0]);
-        syntaxOfTweet(filteredTweet).then(answer => {
+        return syntaxOfTweet(filteredTweet).then(answer => {
             expect(answer).to.be.an('array');
         });
         
     });
 })
 
-describe.only('#selectWordType', () => {
+describe('#selectWordType', () => {
     it('it should return a string', () => {
         const randomWord = selectWordType(exampleWordTypes, 'ADJ')
         console.log(randomWord)
         expect(randomWord).to.be.a('string')
     })
 })
+
+describe('#translateWord', () => {
+    it('should return a string', () => {
+        return translateWord('hola')
+        .then((word) => {
+            console.log(word)
+            expect(word).to.equal('Hello')
+        })
+    })
+    it('translates a word chosen from a tweet', () => {
+        return translateWord('manzanas')
+        .then((word) => {
+            console.log(word)
+            expect(word).to.equal('apples')
+        })
+    })
+    it('translates a chosen verb from a tweet', () => {
+        return translateWord('juego')
+        .then((word) => {
+            console.log(word)
+            expect(word).to.equal('game')
+        })
+    })
+})
+
+describe.only('#normaliseTweet => #syntaxOfTweet => #selectWordType => #translateWord', () => {
+    it('it returns a string', () => {
+        const filteredTweet = normaliseTweet(exampleTweets[0]);
+        return syntaxOfTweet(filteredTweet)
+            .then(arr => {
+                return selectWordType(arr, 'ADJ')
+            })
+            .then(str => {
+                return translateWord(str)
+            })
+            .then(result => {
+                expect(result).to.equal('hooman')
+            })
+    })
+})
+
 //To Do's
 
 //word, word 

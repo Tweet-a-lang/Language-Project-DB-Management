@@ -4,7 +4,7 @@ const LanguageServiceClient = require('@google-cloud/language')
   .LanguageServiceClient;
 
 const language = new LanguageServiceClient();
-
+const translate = require('@google-cloud/translate')();
 
 
 function syntaxOfTweet(tweetText) {
@@ -55,5 +55,12 @@ function selectWordType(arr, type){
   return _.sample(filtered).word
 }
 
-
-module.exports = { syntaxOfTweet, normaliseTweet, selectWordType };
+function translateWord(word) {
+  return translate.translate(word, 'en')
+  .then(translation => {
+    const translatedWord = translation[1].data.translations[0].translatedText
+    return translatedWord
+  })
+  .catch(console.error)
+}
+module.exports = { syntaxOfTweet, normaliseTweet, selectWordType, translateWord };
