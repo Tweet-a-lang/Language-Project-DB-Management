@@ -1,4 +1,5 @@
 const fs = require('fs');
+const _ = require('underscore');
 const LanguageServiceClient = require('@google-cloud/language')
   .LanguageServiceClient;
 
@@ -48,4 +49,11 @@ function normaliseTweet(tweetObj) {
   }).join(' ').trim();
 }
 
-module.exports = { syntaxOfTweet, normaliseTweet };
+function selectWordType(arr, type){
+  //Must support fallback option if appropriate word is not available
+  const filtered = arr.filter(word => word.type === type)
+  return _.sample(filtered).word
+}
+
+
+module.exports = { syntaxOfTweet, normaliseTweet, selectWordType };

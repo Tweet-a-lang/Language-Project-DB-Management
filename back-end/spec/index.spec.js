@@ -1,8 +1,25 @@
 const {expect} = require('chai');
-const {syntaxOfTweet, normaliseTweet} = require('../index.js');
+const {syntaxOfTweet, normaliseTweet, selectWordType} = require('../index.js');
 const exampleTweets = require('../exampleTweets.json');
 
 const text = exampleTweets[0].text;//Math.floor(Math.random() * exampleTweets.length)].text;
+const exampleWordTypes = 
+[ { word: 'Ballenas', type: 'NOUN' },
+{ word: ',', type: 'PUNCT' },
+{ word: 'delfines', type: 'NOUN' },
+{ word: 'y', type: 'CONJ' },
+{ word: 'marsopas', type: 'NOUN' },
+{ word: 'tienen', type: 'VERB' },
+{ word: 'un', type: 'DET' },
+{ word: 'comportamiento', type: 'NOUN' },
+{ word: 'casi', type: 'ADV' },
+{ word: 'humano', type: 'ADJ' },
+{ word: '.', type: 'PUNCT' },
+{ word: 'Las', type: 'DET' },
+{ word: 'pruebas', type: 'NOUN' },
+{ word: ',', type: 'PUNCT' },
+{ word: 'aquí', type: 'ADV' },
+{ word: ':', type: 'PUNCT' } ]
 
 describe('#syntaxOfTweet', () => {
     it('is a function', () => {
@@ -38,11 +55,15 @@ describe('#normaliseTweet => #syntaxOfTweet', () => {
     });
 })
 
+describe.only('#selectWordType', () => {
+    it('it should return a string', () => {
+        const randomWord = selectWordType(exampleWordTypes, 'ADJ')
+        console.log(randomWord)
+        expect(randomWord).to.be.a('string')
+    })
+})
 //To Do's
-//Hyperlinks
-    //Shortened links
-    //Use Twitter's links
-//Remove puncuation
+
 //word, word 
 //Symbols
 //Edge cases for tweets with no links, or only links

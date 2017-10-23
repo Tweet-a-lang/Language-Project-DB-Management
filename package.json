@@ -4,15 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "export GOOGLE_APPLICATION_CREDENTIALS=./keyfile.json && mocha ./spec/*",
-    "start": "export GOOGLE_APPLICATION_CREDENTIALS=./keyfile.json && node index.js"
+    "test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && mocha ./back-end/spec/*",
+    "start": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && node ./back-end/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/language": "^1.0.0",
-    "dotenv": "^4.0.0"
+    "dotenv": "^4.0.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "chai": "^4.1.2",
