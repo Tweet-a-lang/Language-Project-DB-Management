@@ -22,29 +22,15 @@ describe('#normaliseTweet', () => {
         expect(normaliseTweet).to.be.a('function');
     });
 
-    //NEEDS TO SUPPORT SHORT LINKS E.G. bit.ly/1ca2ac
-    it('removes links from tweets', () => {
-        const testTweet = 'Las pruebas, aquí:  \nhttps://t.co/DCmlYodKeS https://t.co/7hCmciTYUk';
-        const answerTweet = 'Las pruebas, aquí:';
-        expect(normaliseTweet(testTweet)).to.equal(answerTweet);
-    });
-
-    it('removes hashtags from tweets', () => {
-        const testTweet = 'Las pruebas, aquí:  #YOLO';
-        const answerTweet = 'Las pruebas, aquí:';
-        expect(normaliseTweet(testTweet)).to.equal(answerTweet);
-    });
-
-    it('removes mentions from tweets', () => {
-        const testTweet = 'Las pruebas, aquí: @Sinnedennis';
-        const answerTweet = 'Las pruebas, aquí:';
-        expect(normaliseTweet(testTweet)).to.equal(answerTweet);
-    });
+    it('should loop through tweetObj and remove links', () => {
+        const testTweet = exampleTweets[0];
+        expect(normaliseTweet(testTweet)).to.equal('Ballenas, delfines y marsopas tienen un comportamiento casi humano. Las pruebas, aquí:');
+    })
 });
 
 describe('#normaliseTweet => #syntaxOfTweet', () => {
     it('should return an array', () => {
-        const filteredTweet = normaliseTweet(text);
+        const filteredTweet = normaliseTweet(exampleTweets[0]);
         syntaxOfTweet(filteredTweet).then(answer => {
             expect(answer).to.be.an('array');
         });
@@ -55,4 +41,8 @@ describe('#normaliseTweet => #syntaxOfTweet', () => {
 //To Do's
 //Hyperlinks
     //Shortened links
+    //Use Twitter's links
+//Remove puncuation
+//word, word 
 //Symbols
+//Edge cases for tweets with no links, or only links
