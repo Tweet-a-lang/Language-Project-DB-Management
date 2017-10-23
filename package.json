@@ -1,0 +1,21 @@
+{
+  "name": "languageTranslateTest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "export GOOGLE_APPLICATION_CREDENTIALS=./keyfile.json && mocha ./spec/*",
+    "start": "export GOOGLE_APPLICATION_CREDENTIALS=./keyfile.json && node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/language": "^1.0.0",
+    "dotenv": "^4.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1"
+  }
+}
