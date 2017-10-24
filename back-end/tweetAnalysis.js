@@ -53,7 +53,8 @@ function normaliseTweet(tweetObj) {
 
 function selectWordType(arr, type){
   //Must support fallback option if appropriate word is not available
-  const filtered = arr.filter(word => word.type === type)
+  let filtered = arr.filter(word => word.type === type)
+  if(filtered.length === 0) filtered = arr.filter(word => word.type === 'VERB')
   return _.sample(filtered).word
 }
 

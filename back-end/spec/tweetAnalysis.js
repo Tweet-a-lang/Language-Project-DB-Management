@@ -1,5 +1,5 @@
 const {expect} = require('chai');
-const {syntaxOfTweet, normaliseTweet, selectWordType, translateWord, randomWords, pickCorrectWord} = require('../index.js');
+const {syntaxOfTweet, normaliseTweet, selectWordType, translateWord, randomWords, pickCorrectWord} = require('../tweetAnalysis.js');
 const exampleTweets = require('../exampleTweets.json');
 const _ = require('underscore')
 

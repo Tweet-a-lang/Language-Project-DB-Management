@@ -1,11 +1,12 @@
-const saveTestData = require('../../seed/test.seed')
-const {Users} = require('../../models/models');
+// const saveTestData = require('../../seed/test.seed')
+const {Users, Tweets} = require('../../models/models');
 
 
 const getUser = (req, res) => {
     let {username} = req.params
     Users.findOne({name: username})
     .then(data => {
+        if(data === null) return addUser(req,res)
         res.send(data)
     })
     .catch(console.error)
@@ -13,13 +14,7 @@ const getUser = (req, res) => {
 
 const addUser = (req, res) => {
     let {username} = req.params;
-    // return Users.save({
-    //     name: username.toLowerCase()
-    // })
-    // .then(data => {
-    //     res.send(data)
-    // })
-    // .catch(console.error)
+
     const newUser = new Users({name: username.toLowerCase()})
        newUser.save()
         .then(data => {
@@ -45,4 +40,28 @@ const decreaseScore = (req, res) => {
     })
     .catch(console.error)
 }
-module.exports = {getUser, addUser, increaseScore, decreaseScore}
+
+
+const  completedTweet = (req, res) => {
+    const {username, id} = req.params;
+    Users.findOneAndUpdate({name: username},{$push: {completedTweets: id}}, {new: true})
+    .then(data => {
+        res.send(data);
+    })
+    .catch(console.error)
+}
+
+const getAllUsers = (req, res) => {
+    Users.find()
+    .then(data =>{
+        res.send(data)
+    }).catch(console.error)
+}
+
+const getAllTweets = (req, res) => {
+    Tweets.find()
+    .then(data => {
+        res.send(data)
+    }).catch(console.error);
+}
+module.exports = {getUser, addUser, increaseScore, decreaseScore, completedTweet, getAllUsers, getAllTweets}
