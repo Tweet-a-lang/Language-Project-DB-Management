@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json",
+    "server:test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && mocha ./back-end/spec/server.spec.js",
     "start": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && node ./back-end/tweetAnalysis.js",
-    "server": "node back-end/server.js",
-    "server:test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && mocha ./back-end/spec/server.spec.js"
+    "server": "node back-end/server/server.js",
+    "server:seed-all": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && node ./back-end/seed/test.seed.js"
   },
   "keywords": [],
   "author": "",
