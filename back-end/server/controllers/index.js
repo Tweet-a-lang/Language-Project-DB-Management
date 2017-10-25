@@ -100,7 +100,6 @@ const getUnseenTweets = (req, res) => {
             for (let i = 0; i < tweets.length; i++) {
                 if (completedTweets.indexOf(tweets[i].id) === -1) {
                     filteredTweets.push(tweets[i])
-                    // console.log(tweets[i], 'this is tweets[i]')
                 }
                 if (filteredTweets.length === numOfTweets) break;
             }
@@ -114,14 +113,10 @@ const getUnseenTweets = (req, res) => {
         })
         .then(arr => {
             const finalResult = unseenTweets.map((tweet, index) => {
-                // return Object.assign({}, tweet, { answers: arr[index] })
-                // console.log(tweet.answers, 'this is the answers')
                 tweet = tweet.toObject()
                 tweet.answers = arr[index]
                 return tweet;
             });
-            // console.log(Object.keys(finalResult[0]))
-            console.log(finalResult)
             res.send(finalResult)
         })
         .catch(console.error)

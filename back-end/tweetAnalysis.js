@@ -9,7 +9,6 @@ const ranWords = require('random-words');
 
 
 function syntaxOfTweet(tweetText) {
-  console.log('inside syntaxofTweet', tweetText)
   const document = {
     content: tweetText,
     type: 'PLAIN_TEXT'
