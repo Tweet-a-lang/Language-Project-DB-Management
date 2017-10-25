@@ -1,9 +1,9 @@
 const {expect} = require('chai');
 const {syntaxOfTweet, normaliseTweet, selectWordType, translateWord, randomWords, pickCorrectWord} = require('../tweetAnalysis.js');
-const exampleTweets = require('../exampleTweets.json');
+// const exampleTweets = require('../exampleTweets.json');
 const _ = require('underscore')
-
-const text = exampleTweets[0].text;//Math.floor(Math.random() * exampleTweets.length)].text;
+const axios = require('axios')
+// const text = exampleTweets[0].text;//Math.floor(Math.random() * exampleTweets.length)].text;
 const exampleWordTypes = 
 [ { word: 'Ballenas', type: 'NOUN' },
 { word: ',', type: 'PUNCT' },
@@ -22,20 +22,31 @@ const exampleWordTypes =
 { word: 'aquí', type: 'ADV' },
 { word: ':', type: 'PUNCT' } ]
 
-describe('#syntaxOfTweet', () => {
+describe.only('#syntaxOfTweet', () => {
+    let text;
+    beforeEach(() => {
+         axios.get('http://localhost:3001/api/tweets')
+        .then(data => {
+            text = data
+        })
+        .catch(console.error)
+
+    }) 
     it('is a function', () => {
         expect(syntaxOfTweet).to.be.a('function');
     });
 
     it('returns an array of words and their type', () => {
-        return syntaxOfTweet(text)
+        let tweetText = text
+        console.log(tweetText)
+        return syntaxOfTweet(tweetText)
             .then(answer => {
                 expect(answer).to.be.a('array');
             })
     })
 });
 
-describe.only('#normaliseTweet', () => {
+describe('#normaliseTweet', () => {
     it('is a function', () => {
         expect(normaliseTweet).to.be.a('function');
     });
