@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && mocha ./back-end/spec/*",
+    "test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json",
     "start": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && node ./back-end/tweetAnalysis.js",
-    "server": "node back-end/server.js"
+    "server": "node back-end/server.js",
+    "server:test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && mocha ./back-end/spec/server.spec.js"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "axios": "^0.17.0",
     "chai": "^4.1.2",
-    "mocha": "^4.0.1"
+    "mocha": "^4.0.1",
+    "supertest": "^3.0.0"
   }
 }
