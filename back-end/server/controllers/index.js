@@ -67,18 +67,7 @@ const getAllTweets = (req, res) => {
 };
 
 const getUnseenTweets = (req, res) => {
-    /*
-    Get numb of needed tweets
-    Get the username
-    Get the users seen tweets from the database
-    Get all tweets from database
-    filter Tweets based on userSeen Tweets
-        Send batch of tweets to natural language processing
-        Select and translate a word from each tweet
-            Select random words for each Tweet
-            Combine and Send
 
-    */
     const numOfTweets = +req.query.count || 5;
     let unseenTweets = [];
     const { username } = req.params;
@@ -90,27 +79,25 @@ const getUnseenTweets = (req, res) => {
             const user = data[0];
             const tweets = data[1];
 
-            // unseenTweets.forEach((tweet,index) => {
-            //     unseenTweets[index] = tweet[index];
-            // })
-
-
+            
             //Filters Tweets that have not been seen by the user
-            const completedTweets = user.completedTweets
+            const completedTweets = user.completedTweets;
             const filteredTweets = [];
+
+            //Loop through tweets and push to filteredTweets if not seen
             for (let i = 0; i < tweets.length; i++) {
-                if (completedTweets.indexOf(tweets[i].id) === -1) {
+                if (completedTweets.indexOf(tweets[i].tweet.id) === -1) {
                     filteredTweets.push(tweets[i])
                 }
                 if (filteredTweets.length === numOfTweets) break;
             }
 
-                unseenTweets = filteredTweets.concat([]);
- 
-               const analysedTweets = filteredTweets.map(tweet => {
-                   return pickCorrectWord(tweet, 'ADJ')
-                })
-                return Promise.all(analysedTweets)
+            unseenTweets = filteredTweets.concat([]);
+
+            const analysedTweets = filteredTweets.map(tweet => {
+                return pickCorrectWord(tweet, 'ADJ')
+            })
+            return Promise.all(analysedTweets)
         })
         .then(arr => {
             const finalResult = unseenTweets.map((tweet, index) => {
@@ -118,6 +105,7 @@ const getUnseenTweets = (req, res) => {
                 tweet.answers = arr[index]
                 return tweet;
             });
+            // console.log(finalResult)
             res.send(finalResult)
         })
         .catch(console.error)
@@ -125,43 +113,43 @@ const getUnseenTweets = (req, res) => {
 
 const getScoreboard = (req, res) => {
     Users.find()
-    .then(users => {
-        const scoresArray = users.map(user => {
-            user = user.toObject();
-            const {name, score} = user
-            return {name, score}
+        .then(users => {
+            const scoresArray = users.map(user => {
+                user = user.toObject();
+                const { name, score } = user
+                return { name, score }
+            })
+                .sort((a, b) => {
+                    return a.score < b.score
+                })
+            res.send(scoresArray);
         })
-        .sort((a,b) => {
-            return a.score < b.score
-        })
-        res.send(scoresArray);
-    })
 }
 
 const patchUser = (req, res) => {
-    const {username} = req.params;
-    const {completedTweets : tweetsDone = [], score = 0} = req.body
-    Users.findOne({name: username})
-    .then(user => {
-        const newTweetsDone = [...user.completedTweets, ...tweetsDone];
-        const newScore = user.score + score;
-        user.completedTweets = newTweetsDone;
-        user.score = newScore;
-        user.save();
-        res.send(user)
-    })
-    .catch(console.error)
+    const { username } = req.params;
+    const { completedTweets: tweetsDone = [], score = 0 } = req.body
+    Users.findOne({ name: username })
+        .then(user => {
+            const newTweetsDone = [...user.completedTweets, ...tweetsDone];
+            const newScore = user.score + score;
+            user.completedTweets = newTweetsDone;
+            user.score = newScore;
+            user.save();
+            res.send(user)
+        })
+        .catch(console.error)
 }
 
 const resetUser = (req, res) => {
-    const {username} = req.params;
-    Users.findOne({name: username})
-    .then(user => {
-        user.score = 0;
-        user.completedTweets = [];
-        user.save();
-        res.send(user);
-    })
+    const { username } = req.params;
+    Users.findOne({ name: username })
+        .then(user => {
+            user.score = 0;
+            user.completedTweets = [];
+            user.save();
+            res.send(user);
+        })
 }
 
-module.exports = { getUser, addUser, increaseScore, decreaseScore, completedTweet, getAllUsers, getAllTweets, getUnseenTweets, getScoreboard , patchUser, resetUser};
+module.exports = { getUser, addUser, increaseScore, decreaseScore, completedTweet, getAllUsers, getAllTweets, getUnseenTweets, getScoreboard, patchUser, resetUser };

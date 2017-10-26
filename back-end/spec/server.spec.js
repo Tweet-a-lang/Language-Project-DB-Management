@@ -5,7 +5,7 @@ describe('API', () => {
     describe('GET tweets/:username', () => {
         it('returns with a status code of 200', () => {
             return request(app)
-                .get('/api/tweets/dennis')
+                .get('/api/tweets/olie')
                 .expect(200);
         })
         it('returns an array', () => {
@@ -13,13 +13,13 @@ describe('API', () => {
             return request(app)
             .get(`/api/tweets/dennis?count=${numbOfTweets}`)
             .then(res => {
-                const tweetData = res.body[0]
-                expect(res.body).to.be.an('array')
-                expect(res.body.length).to.equal(numbOfTweets)
-                expect(res.body[0].answers).to.be.an('object')
-                expect(res.body[0].answers.choices).to.be.an('array')
+                const tweetData = JSON.parse(res.text);
+
+                expect(tweetData).to.be.an('array')
+                expect(tweetData.length).to.equal(numbOfTweets)
+                expect(tweetData[0].answers).to.be.an('object')
+                expect(tweetData[0].answers.choices).to.be.an('array')
             })
-            .catch(console.error)
         }).timeout(5000)
     })
     describe('GET user/:username', () => {
@@ -31,12 +31,12 @@ describe('API', () => {
                 const {name, score, completedTweets} = res.body;
                 expect(name).to.be.a('string');
                 expect(name).to.eql('olie');
-                expect(score).to.be.a('string');
+                expect(score).to.be.a('number');
                 expect(completedTweets).to.be.a('array');
             })
         })
     });
-    describe.only('PATCH user/:username', () => {
+    describe('PATCH user/:username', () => {
         it('returns with a status code of 200', () => {
             const patchBody = {
                 completedTweets: ['test'],
