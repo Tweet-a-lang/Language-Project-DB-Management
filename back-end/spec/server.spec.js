@@ -36,10 +36,10 @@ describe('API', () => {
           expect(completedTweets).to.be.a('array');
         });
     });
-    it('returns a 403 error if the user is not found', () => {
+    it('returns a 400 error if the user is not found', () => {
       return request(app)
         .get('/api/user/booboo')
-        .expect(403);
+        .expect(400);
     });
   });
   describe('POST user/:username', () => {
@@ -55,11 +55,11 @@ describe('API', () => {
           expect(name).to.equal('boo boo');
         });
     });
-    it.only('returns with a 403 error if posting with no name', () => {
+    it('returns with a 400 error if posting with no name', () => {
       return request(app)
         .post('/api/user')
         .send()
-        .expect(403);
+        .expect(400);
     });
   });
   describe('PATCH user/:username', () => {
@@ -91,6 +91,12 @@ describe('API', () => {
           expect(score).to.equal(1);
           expect(completedTweets).to.eql(['test']);
         });
+    });
+    it('returns a 400 error if patching a user that does not exist', () => {
+      return request(app)
+        .patch('/api/user/testUser')
+        .send({})
+        .expect(400);
     });
   });
 });

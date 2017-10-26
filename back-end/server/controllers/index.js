@@ -7,10 +7,12 @@ const getUser = (req, res, next) => {
   let { username } = req.params;
   Users.findOne({ name: username })
     .then(data => {
-      if (data === null) return next({type: 403});
-      else res.send(data);
+      if (!data) return next({type: 400});
+      else return res.send(data);
     })
-    .catch(console.error);
+    .catch(err => {
+      if(err) next({type: 500});
+    });
 };
 
 const addUser = (req, res, next) => {
@@ -24,58 +26,47 @@ const addUser = (req, res, next) => {
   const {
     name, score = 0, completedTweets = [], avatar = avatarUrlDefault
   } = req.body;
-  if(!name) return next({type: 403, msg:'missing name'});
+  if(!name) return next({type: 400, msg:'missing name'});
   const newUser = new Users({name, score, completedTweets, avatar});
   newUser.save()
     .then(user => {
       res.send(user);
     })
-    .catch(console.error);
+    .catch(err => {
+      if(err) next({type: 500});
+    });
 };
 
-const increaseScore = (req, res) => {
-  const { username } = req.params;
-  Users.findOneAndUpdate({ name: username }, { $inc: { score: 1 } }, { new: true })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(console.error);
-};
-
-const decreaseScore = (req, res) => {
-  const { username } = req.params;
-  Users.findOneAndUpdate({ name: username }, { $inc: { score: -1 } }, { new: true })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(console.error);
-};
-
-
-const completedTweet = (req, res) => {
+const completedTweet = (req, res, next) => {
   const { username, id } = req.params;
   Users.findOneAndUpdate({ name: username }, { $push: { completedTweets: id } }, { new: true })
     .then(data => {
       res.send(data);
     })
-    .catch(console.error);
+    .catch(err => {
+      if(err) next({type: 500});
+    });
 };
 
-const getAllUsers = (req, res) => {
+const getAllUsers = (req, res, next) => {
   Users.find()
     .then(data => {
       res.send(data);
-    }).catch(console.error);
+    }).catch(err => {
+      if(err) next({type: 500});
+    });
 };
 
-const getAllTweets = (req, res) => {
+const getAllTweets = (req, res, next) => {
   Tweets.find()
     .then(data => {
       res.send(data);
-    }).catch(console.error);
+    }).catch(err => {
+      if(err) next({type: 500});
+    });
 };
 
-const getUnseenTweets = (req, res) => {
+const getUnseenTweets = (req, res ,next) => {
 
   const numOfTweets = +req.query.count || 5;
   let unseenTweets = [];
@@ -118,7 +109,9 @@ const getUnseenTweets = (req, res) => {
       });
       res.send(finalResult);
     })
-    .catch(console.error);
+    .catch(err => {
+      if(err) next({type: 500});
+    });
 };
 
 const getScoreboard = (req, res) => {
@@ -136,19 +129,27 @@ const getScoreboard = (req, res) => {
     });
 };
 
-const patchUser = (req, res) => {
+const patchUser = (req, res, next) => {
   const { username } = req.params;
   const { completedTweets: tweetsDone = [], score = 0 } = req.body;
+
   Users.findOne({ name: username })
     .then(user => {
+      if(user === null ) return next({type: 400});
+
       const newTweetsDone = [...user.completedTweets, ...tweetsDone];
       const newScore = user.score + score;
       user.completedTweets = newTweetsDone;
       user.score = newScore;
-      user.save();
-      res.send(user);
-    })
-    .catch(console.error);
+
+      user.save()
+        .then(result => {
+          res.send(result);
+        })
+        .catch(err => {
+          if(err) next({type: 500});
+        });
+    });
 };
 
 const resetUser = (req, res) => {
@@ -162,4 +163,4 @@ const resetUser = (req, res) => {
     });
 };
 
-module.exports = { getUser, addUser, increaseScore, decreaseScore, completedTweet, getAllUsers, getAllTweets, getUnseenTweets, getScoreboard, patchUser, resetUser };
+module.exports = { getUser, addUser, completedTweet, getAllUsers, getAllTweets, getUnseenTweets, getScoreboard, patchUser, resetUser };
