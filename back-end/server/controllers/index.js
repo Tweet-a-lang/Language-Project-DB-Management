@@ -103,9 +103,10 @@ const getUnseenTweets = (req, res) => {
             const finalResult = unseenTweets.map((tweet, index) => {
                 tweet = tweet.toObject()
                 tweet.answers = arr[index]
+                //remove wordArr from client result
+                delete tweet.wordArr
                 return tweet;
             });
-            // console.log(finalResult)
             res.send(finalResult)
         })
         .catch(console.error)

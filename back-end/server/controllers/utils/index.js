@@ -28,7 +28,7 @@ function syntaxOfTweet(tweetText) {
     .catch(err => {
       console.error('ERROR:', err);
     });
-}
+};
 
 //Ballenas, delfines y marsopas tienen un comportamiento casi humano. Las pruebas, aquí:  \nhttps://t.co/DCmlYodKeS… https://t.co/7hCmciTYUk
 
@@ -49,7 +49,7 @@ function normaliseTweet(tweetObj) {
   return tweet.split(' ').filter((word) => {
     return !word.includes('#') && !word.includes('@') ? true : false;
   }).join(' ').trim();
-}
+};
 
 function selectWordType(arr, type){
   //Must support fallback option if appropriate word is not available
@@ -58,7 +58,7 @@ function selectWordType(arr, type){
   if(filtered.length === 0) return null;
   const randomWord = _.sample(filtered).word
   return randomWord
-}
+};
 
 function translateWord(word) {
   return translate.translate(word, 'en')
@@ -67,7 +67,7 @@ function translateWord(word) {
     return translatedWord
   })
   .catch(console.error)
-}
+};
 
 function pickCorrectWord (tweet, type) {
   const finalResult = {};
@@ -84,27 +84,7 @@ function pickCorrectWord (tweet, type) {
     }
     finalResult.choices = choices;
     return finalResult;
-  })
-
-  // return syntaxOfTweet(normaliseTweet(tweet))
-  //         .then(arr => {
-  //           return selectWordType(arr, type)
-  //         })
-  //         .then(word => {
-  //           finalResult.chosenWord = word
-  //           return translateWord(word)
-  //         })
-  //         .then(translatedWord => {
-  //           finalResult.translatedWord = translatedWord;
-  //           let choices = []; choices.length = 4;
-  //           for (let i = 0; i < choices.length; i++) {
-  //             if(i === 0) choices[i] = {text: translatedWord, result: true}
-  //             else choices[i] = {text: ranWords(), result: false}
-  //           }
-  //           finalResult.choices = choices;
-  //           return finalResult;
-  //         })
-        
+  })        
 }
 
 
