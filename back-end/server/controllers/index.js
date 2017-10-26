@@ -122,4 +122,32 @@ const getUnseenTweets = (req, res) => {
         .catch(console.error)
 };
 
-module.exports = { getUser, addUser, increaseScore, decreaseScore, completedTweet, getAllUsers, getAllTweets, getUnseenTweets };
+const getScoreboard = (req, res) => {
+    Users.find()
+    .then(users => {
+        const scoresArray = users.map(user => {
+            user = user.toObject();
+            const {name, score} = user
+            return {name, score}
+        })
+        .sort((a,b) => {
+            return a.score < b.score
+        })
+        res.send(scoresArray);
+    })
+}
+
+const patchUser = (req, res) => {
+    const {username} = req.params;
+    const {completedTweets : tweetsDone} = req.body
+    Users.findOne({name: username})
+    .then(user => {
+        const newTweetsDone = [...user.completedTweets, ...tweetsDone]
+        user.completedTweets = newTweetsDone;
+        user.save();
+        res.send(JSON.stringify(user))
+    })
+    .catch(console.error)
+}
+
+module.exports = { getUser, addUser, increaseScore, decreaseScore, completedTweet, getAllUsers, getAllTweets, getUnseenTweets, getScoreboard , patchUser};

@@ -1,10 +1,14 @@
 const express = require('express');
 const app = express();
-const PORT = 3001
+const PORT = 3001;
 const config = require('./config');
 const mongoose = require('mongoose');
-const {getUser, addUser, increaseScore, decreaseScore, completedTweet, getAllUsers, getAllTweets, getUnseenTweets} = require('./controllers')
 
+
+const apiRouter = require('./routers/apiRouter');
+const devRouter = require('./routers/devRouter');
+
+const {json} = require('body-parser')
 mongoose.Promise = global.Promise;
 
 mongoose.connect(config.url, {
@@ -18,17 +22,16 @@ mongoose.connect(config.url, {
 app.get('/', (req, res) => {
     res.send('the root is working')
 })
-app.get('/api/tweets/:username', getUnseenTweets)
-app.get('/api/user/:username', getUser)
-app.get('/api/user/:username/score_up', increaseScore)
-app.get('/api/user/:username/score_down', decreaseScore)
-app.get('/api/user/:username/tweet/:id', completedTweet)
-app.get('/api/user', getAllUsers)
 
-app.get('/api/tweets', getAllTweets)
+app.use(json())
+app.use('/api', apiRouter)
+app.use('/dev', devRouter)
 
-// app.listen(PORT, () => {
-//     console.log(`THE server is listening on port ${PORT}`)
-// })
+
+
+
+app.listen(PORT, () => {
+    console.log(`THE server is listening on port ${PORT}`)
+})
 
 module.exports = app;
