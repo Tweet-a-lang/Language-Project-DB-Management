@@ -112,5 +112,5 @@ function vetTweets() {
             seedDataBase(seedTweets(filteredTweets), seedUsers())
         })
 }
+
 vetTweets();
-// seedDataBase();
