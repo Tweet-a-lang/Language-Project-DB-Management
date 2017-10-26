@@ -55,6 +55,7 @@ function selectWordType(arr, type){
   //Must support fallback option if appropriate word is not available
   let filtered = arr.filter(word => word.type === type)
   if(filtered.length === 0) filtered = arr.filter(word => word.type === 'VERB')
+  if(filtered.length === 0) return null;
   const randomWord = _.sample(filtered).word
   return randomWord
 }
