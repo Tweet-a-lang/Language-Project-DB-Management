@@ -36,13 +36,13 @@ describe('API', () => {
           expect(completedTweets).to.be.a('array');
         });
     });
-    it.only('returns a 403 error if the user is not found', () => {
+    it('returns a 403 error if the user is not found', () => {
       return request(app)
         .get('/api/user/booboo')
         .expect(403);
     });
   });
-  describe.only('POST user/:username', () => {
+  describe('POST user/:username', () => {
     it('returns with a status code of 200', () => {
       return request(app)
         .post('/api/user')
@@ -54,6 +54,12 @@ describe('API', () => {
           const {name} = res.body;
           expect(name).to.equal('boo boo');
         });
+    });
+    it.only('returns with a 403 error if posting with no name', () => {
+      return request(app)
+        .post('/api/user')
+        .send()
+        .expect(403);
     });
   });
   describe('PATCH user/:username', () => {

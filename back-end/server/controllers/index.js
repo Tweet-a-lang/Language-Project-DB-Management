@@ -13,7 +13,7 @@ const getUser = (req, res, next) => {
     .catch(console.error);
 };
 
-const addUser = (req, res) => {
+const addUser = (req, res, next) => {
   const avatarUrlDefault = 'https://avatars0.githubusercontent.com/u/30082843?s=460&v=4';
   // const newUser = new Users({ name: username.toLowerCase() })
   // newUser.save()
@@ -24,6 +24,7 @@ const addUser = (req, res) => {
   const {
     name, score = 0, completedTweets = [], avatar = avatarUrlDefault
   } = req.body;
+  if(!name) return next({type: 403, msg:'missing name'});
   const newUser = new Users({name, score, completedTweets, avatar});
   newUser.save()
     .then(user => {
