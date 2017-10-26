@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json",
-    "server:test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && mocha ./back-end/spec/server.spec.js",
+    "server:test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json &&  PORT=3100 mocha ./back-end/spec/server.spec.js",
     "start": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && node ./back-end/tweetAnalysis.js",
-    "server": "node back-end/server/server.js",
+    "server": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && node back-end/server/server.js",
     "server:seed-all": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && node ./back-end/seed/test.seed.js"
   },
   "keywords": [],
@@ -16,11 +16,12 @@
   "dependencies": {
     "@google-cloud/language": "^1.0.0",
     "@google-cloud/translate": "^1.0.0",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "mongodb": "^2.2.33",
     "mongoose": "^4.12.4",
-    "nodemon": "^1.12.1",
     "random-words": "0.0.1",
     "underscore": "^1.8.3"
   },
@@ -28,6 +29,7 @@
     "axios": "^0.17.0",
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
+    "nodemon": "^1.12.1",
     "supertest": "^3.0.0"
   }
 }
