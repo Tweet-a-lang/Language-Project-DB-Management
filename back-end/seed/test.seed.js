@@ -23,7 +23,7 @@ function seedDataBase(tweets, users) {
     if (users) {
         Users.collection.drop()
 
-        Promise.all(seedUsers())
+        Promise.all(users)
             .then(data => {
                 console.log('the collection of users was seeded with', data.length, 'users')
                 mongoose.disconnect()
@@ -34,7 +34,7 @@ function seedDataBase(tweets, users) {
     if (tweets) {
         Tweets.collection.drop()
 
-        Promise.all(seedTweets())
+        Promise.all(tweets)
             .then(data => {
                 console.log('the collection of tweets was seeded with', data.length, 'tweets')
                 mongoose.disconnect()
