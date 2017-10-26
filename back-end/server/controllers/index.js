@@ -1,6 +1,6 @@
 // const saveTestData = require('../../seed/test.seed')
 const { Users, Tweets } = require('../../models/models');
-const { syntaxOfTweet, normaliseTweet, selectWordType, translateWord, randomWords, pickCorrectWord } = require('./utils');
+const { syntaxOfTweet, normaliseTweet, selectWordType, translateWord, randomWords, pickCorrectWord, filterUnseenTweets } = require('./utils');
 const _ = require('underscore')
 
 const getUser = (req, res) => {
@@ -78,20 +78,11 @@ const getUnseenTweets = (req, res) => {
         .then((data) => {
             const user = data[0];
             const tweets = data[1];
-
-            
-            //Filters Tweets that have not been seen by the user
             const completedTweets = user.completedTweets;
-            const filteredTweets = [];
 
-            //Loop through tweets and push to filteredTweets if not seen
-            for (let i = 0; i < tweets.length; i++) {
-                if (completedTweets.indexOf(tweets[i].tweet.id) === -1) {
-                    filteredTweets.push(tweets[i])
-                }
-                if (filteredTweets.length === numOfTweets) break;
-            }
-
+            //Filters Tweets that have not been seen by the user
+            const filteredTweets = filterUnseenTweets(completedTweets, tweets, numOfTweets);
+            //Add copy of filtered tweets for future then blocks
             unseenTweets = filteredTweets.concat([]);
 
             const analysedTweets = filteredTweets.map(tweet => {
@@ -99,10 +90,10 @@ const getUnseenTweets = (req, res) => {
             })
             return Promise.all(analysedTweets)
         })
-        .then(arr => {
+        .then(wordArr => {
             const finalResult = unseenTweets.map((tweet, index) => {
                 tweet = tweet.toObject()
-                tweet.answers = arr[index]
+                tweet.answers = wordArr[index]
                 //remove wordArr from client result
                 delete tweet.wordArr
                 return tweet;
