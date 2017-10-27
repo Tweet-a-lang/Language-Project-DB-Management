@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { Tweets, Users } = require('../models/models.js');
 
-const testData = require('./exampleTweets.json');
+const testTweets = require('./exampleTweets.json');
 const testUsers = require('./exampleUsers.json');
 
 const mongoose = require('mongoose');
@@ -22,10 +22,9 @@ function seedDataBase(tweets, users) {
 
   if (users) {
     Users.collection.drop();
-
     Promise.all(users)
       .then(data => {
-        console.log('the collection of users was seeded with', data.length, 'users');
+        console.log(`the collection of users was seeded with ${data.length} users`);
         mongoose.disconnect();
       })
       .catch(console.error);
@@ -36,7 +35,7 @@ function seedDataBase(tweets, users) {
 
     Promise.all(tweets)
       .then(data => {
-        console.log('the collection of tweets was seeded with', data.length, 'tweets');
+        console.log(`the collection of tweets was seeded with ${data.length} tweets`);
         mongoose.disconnect();
       })
       .catch(console.error);
@@ -63,13 +62,8 @@ function seedTweets(vettedTweets) {
   });
 }
 
-
-function vetTweets() {
-  filteredTweets = [];
-
-  console.log('Unfiltered tweets: ' + testData.length);
-
-  normalisedTweets = testData.map((tweet) => {
+function cleanTweets(newTweets) {
+  return newTweets.map((tweet) => {
     return {
       created_at: tweet.created_at,
       id: tweet.id,
@@ -77,9 +71,42 @@ function vetTweets() {
       normalisedText: normaliseTweet(tweet),
       entities: tweet.entities,
       user_screen_name: tweet.user.screen_name,
-      user_profile_image: tweet.user.profile_image_url
+      user_profile_image: tweet.user.profile_image_url,
+      topic: tweet.topic
     };
   });
+}
+
+function joinTweetToSyntax(filteredSyntaxArr, normalisedTweets) {
+  let tweetsAndSyntax = []
+  filteredSyntaxArr.forEach((syntaxArr) => {
+    normalisedTweets.forEach((tweet) => {
+      if (syntaxArr[0].word == tweet.id) {
+        tweetsAndSyntax.push(
+          {
+            tweet,
+            wordArr: syntaxArr.slice(1)
+          }
+        );
+      }
+    });
+  });
+  return tweetsAndSyntax;
+}
+
+function filterInvalidTweets(data) {
+  return data.filter((tweetSyntax) => {
+    const syntaxArrayWithoutID = tweetSyntax.slice(1);
+    return selectWordType(syntaxArrayWithoutID, 'ADJ') !== null;
+  });
+}
+
+function vetTweets(newTweets) {
+  filteredTweets = [];
+
+  console.log('Unfiltered tweets: ' + newTweets.length);
+
+  normalisedTweets = cleanTweets(newTweets);
 
   let promiseArr = normalisedTweets.map((tweet) => {
     return syntaxOfTweet(tweet.id + ' ' + tweet.normalisedText);
@@ -88,29 +115,19 @@ function vetTweets() {
   Promise.all(promiseArr)
     .then((data) => {
 
-      filteredSyntaxArr = data.filter((tweetSyntax) => {
-        const syntaxArrayWithoutID = tweetSyntax.slice(1);
-        return selectWordType(syntaxArrayWithoutID, 'ADJ') !== null;
-      });
+      filteredSyntaxArr = filterInvalidTweets(data);
+      filteredTweets = joinTweetToSyntax(filteredSyntaxArr, normalisedTweets);
 
-      filteredSyntaxArr.forEach((syntaxArr) => {
-        normalisedTweets.forEach((tweet) => {
-          if (syntaxArr[0].word == tweet.id) {
-            filteredTweets.push(
-              {
-                tweet,
-                wordArr: syntaxArr.slice(1)
-              }
-            );
-          }
-        });
-      });
 
-      const removedTweets = testData.length - filteredTweets.length;
+      const removedTweets = newTweets.length - filteredTweets.length;
       console.log(`Removed ${removedTweets} tweet${removedTweets === 1 ? '' : 's'} leaving ${filteredTweets.length} vetted tweets`);
 
       seedDataBase(seedTweets(filteredTweets), seedUsers());
     });
 }
 
-vetTweets();
+function seedDBFromJson() {
+  vetTweets(testTweets);
+}
+
+module.exports = seedDBFromJson;

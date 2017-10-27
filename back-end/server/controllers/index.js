@@ -66,11 +66,21 @@ const getAllTweets = (req, res, next) => {
     });
 };
 
+const getNumOfTweets = (req, res, next) => {
+  Tweets.find()
+    .then(data => {
+      res.send({ message: `Total tweets in DB are: ${data.length}`});
+    }).catch(err => {
+      if(err) next({type: 500});
+    });
+};
+
 const getUnseenTweets = (req, res ,next) => {
 
   const numOfTweets = +req.query.count || 5;
   let unseenTweets = [];
   const { username } = req.params;
+  console.log(username)
   return Promise.all([
       Users.findOne({ name: username }),
       Tweets.find()
@@ -78,6 +88,7 @@ const getUnseenTweets = (req, res ,next) => {
       .then((data) => {
           const user = data[0];
           const tweets = data[1];
+          console.log(data[0])
           const completedTweets = user.completedTweets;
 
           //Filters Tweets that have not been seen by the user
@@ -152,4 +163,4 @@ const resetUser = (req, res) => {
     });
 };
 
-module.exports = { getUser, addUser, completedTweet, getAllUsers, getAllTweets, getUnseenTweets, getScoreboard, patchUser, resetUser };
+module.exports = { getUser, addUser, completedTweet, getAllUsers, getAllTweets, getUnseenTweets, getScoreboard, patchUser, resetUser, getNumOfTweets };
