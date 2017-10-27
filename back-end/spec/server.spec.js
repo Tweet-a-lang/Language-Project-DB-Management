@@ -6,7 +6,7 @@ describe('API', () => {
   describe('GET tweets/:username', () => {
     it('returns with a status code of 200', () => {
       return request(app)
-        .get('/api/tweets/olie')
+        .get('/api/tweets/Olie')
         .expect(200);
     });
     it('returns an array', () => {
@@ -42,7 +42,7 @@ describe('API', () => {
         .expect(400);
     });
   });
-  describe('POST user/:username', () => {
+  describe('POST user/', () => {
     it('returns with a status code of 200', () => {
       return request(app)
         .post('/api/user')
@@ -59,6 +59,14 @@ describe('API', () => {
       return request(app)
         .post('/api/user')
         .send()
+        .expect(400);
+    });
+    it('returns with a 400 error if posting a duplicate name', () => {
+      return request(app)
+        .post('/api/user')
+        .send({
+          name: 'olie'
+        })
         .expect(400);
     });
   });
@@ -103,7 +111,7 @@ describe('API', () => {
 
 describe('DEV', () => {
   describe('GET reset/:username', () => {
-    it('returns witha a status code of 200', () => {
+    it('returns with a status code of 200', () => {
       return request(app)
         .get('/dev/reset/olie')
         .expect(200)
@@ -113,6 +121,25 @@ describe('DEV', () => {
           expect(score).to.equal(0);
           expect(completedTweets).to.eql([]);
         });
+    });
+  });
+  describe('DELETE delete/:username', () => {
+    it('returns with a status code of 200 for successful deletion', () => {
+      return request(app)
+        .post('/api/user')
+        .send({
+          name: 'boo boo'
+        })
+        .then(() => {
+          return request(app)
+            .delete('/dev/delete/boo boo')
+            .expect(200);
+        });
+    });
+    it('returns with a status code of 204 when trying to delete a user that does not exist', () => {
+      return request(app)
+        .delete('/dev/delete/doesnotexist')
+        .expect(204);
     });
   });
 });

@@ -7,34 +7,36 @@ const getUser = (req, res, next) => {
   let { username } = req.params;
   Users.findOne({ name: username })
     .then(data => {
-      if (!data) return next({type: 400});
+      if (!data) return next({ type: 400 });
       else return res.send(data);
     })
     .catch(err => {
-      if(err) next({type: 500});
+      if (err) next({ type: 500 });
     });
 };
 
 const addUser = (req, res, next) => {
   const avatarUrlDefault = 'https://avatars0.githubusercontent.com/u/30082843?s=460&v=4';
-  // const newUser = new Users({ name: username.toLowerCase() })
-  // newUser.save()
-  //     .then(data => {
-  //         res.send(data);
-  //     })
-  //     .catch(console.error)
   const {
     name, score = 0, completedTweets = [], avatar = avatarUrlDefault
   } = req.body;
-  if(!name) return next({type: 400, msg:'missing name'});
-  const newUser = new Users({name, score, completedTweets, avatar});
-  newUser.save()
+
+  if (!name) return next({ type: 400, msg: 'missing name' });
+  return Users.findOne({ name: name })
     .then(user => {
-      res.send(user);
-    })
-    .catch(err => {
-      if(err) next({type: 500});
+      if (user) return next({ type: 400, msg: 'the user already exists' });
+      else {
+        const newUser = new Users({ name, score, completedTweets, avatar });
+        newUser.save()
+          .then(user => {
+            res.send(user);
+          })
+          .catch(err => {
+            if (err) next({ type: 500 });
+          });
+      }
     });
+
 };
 
 const completedTweet = (req, res, next) => {
@@ -44,7 +46,7 @@ const completedTweet = (req, res, next) => {
       res.send(data);
     })
     .catch(err => {
-      if(err) next({type: 500});
+      if (err) next({ type: 500 });
     });
 };
 
@@ -53,7 +55,7 @@ const getAllUsers = (req, res, next) => {
     .then(data => {
       res.send(data);
     }).catch(err => {
-      if(err) next({type: 500});
+      if (err) next({ type: 500 });
     });
 };
 
@@ -62,56 +64,56 @@ const getAllTweets = (req, res, next) => {
     .then(data => {
       res.send(data);
     }).catch(err => {
-      if(err) next({type: 500});
+      if (err) next({ type: 500 });
     });
 };
 
 const getNumOfTweets = (req, res, next) => {
   Tweets.find()
     .then(data => {
-      res.send({ message: `Total tweets in DB are: ${data.length}`});
+      res.send({ message: `Total tweets in DB are: ${data.length}` });
     }).catch(err => {
-      if(err) next({type: 500});
+      if (err) next({ type: 500 });
     });
 };
 
-const getUnseenTweets = (req, res ,next) => {
+const getUnseenTweets = (req, res, next) => {
 
   const numOfTweets = +req.query.count || 5;
   let unseenTweets = [];
   const { username } = req.params;
   console.log(username)
   return Promise.all([
-      Users.findOne({ name: username }),
-      Tweets.find()
+    Users.findOne({ name: username }),
+    Tweets.find()
   ])
-      .then((data) => {
-          const user = data[0];
-          const tweets = data[1];
-          console.log(data[0])
-          const completedTweets = user.completedTweets;
+    .then((data) => {
+      const user = data[0];
+      console.log('#################', user)
+      const tweets = data[1];
+      const completedTweets = user.completedTweets;
 
-          //Filters Tweets that have not been seen by the user
-          const filteredTweets = filterUnseenTweets(completedTweets, tweets, numOfTweets);
-          //Add copy of filtered tweets for future then blocks
-          unseenTweets = filteredTweets.concat([]);
+      //Filters Tweets that have not been seen by the user
+      const filteredTweets = filterUnseenTweets(completedTweets, tweets, numOfTweets);
+      //Add copy of filtered tweets for future then blocks
+      unseenTweets = filteredTweets.concat([]);
 
-          const analysedTweets = filteredTweets.map(tweet => {
-              return pickCorrectWord(tweet, 'ADJ')
-          })
-          return Promise.all(analysedTweets)
-      })
-      .then(wordArr => {
-          const finalResult = unseenTweets.map((tweet, index) => {
-              tweet = tweet.toObject()
-              tweet.answers = wordArr[index]
-              //remove wordArr from client result
-              delete tweet.wordArr
-              return tweet;
-          });
-          res.send(finalResult)
-      })
-      .catch(console.error)
+      const analysedTweets = filteredTweets.map(tweet => {
+        return pickCorrectWord(tweet, 'ADJ');
+      });
+      return Promise.all(analysedTweets);
+    })
+    .then(wordArr => {
+      const finalResult = unseenTweets.map((tweet, index) => {
+        tweet = tweet.toObject();
+        tweet.answers = wordArr[index];
+        //remove wordArr from client result
+        delete tweet.wordArr;
+        return tweet;
+      });
+      res.send(finalResult);
+    })
+    .catch(console.error);
 };
 
 const getScoreboard = (req, res) => {
@@ -135,7 +137,7 @@ const patchUser = (req, res, next) => {
 
   Users.findOne({ name: username })
     .then(user => {
-      if(user === null ) return next({type: 400});
+      if (user === null) return next({ type: 400 });
 
       const newTweetsDone = [...user.completedTweets, ...tweetsDone];
       const newScore = user.score + score;
@@ -147,12 +149,12 @@ const patchUser = (req, res, next) => {
           res.send(result);
         })
         .catch(err => {
-          if(err) next({type: 500});
+          if (err) next({ type: 500 });
         });
     });
 };
 
-const resetUser = (req, res) => {
+const resetUser = (req, res, next) => {
   const { username } = req.params;
   Users.findOne({ name: username })
     .then(user => {
@@ -160,7 +162,33 @@ const resetUser = (req, res) => {
       user.completedTweets = [];
       user.save();
       res.send(user);
+    }).catch(err => {
+      if (err) next({ type: 500 });
     });
 };
 
-module.exports = { getUser, addUser, completedTweet, getAllUsers, getAllTweets, getUnseenTweets, getScoreboard, patchUser, resetUser, getNumOfTweets };
+
+const deleteUser = (req, res, next) => {
+  const { username } = req.params;
+  Users.findOneAndRemove({ name: username })
+    .then(user => {
+      if (user === null) return next({ type: 204 });
+      res.status(200).send(user);
+    }).catch(err => {
+      if (err) next({ type: 500 });
+    });
+};
+
+module.exports = {
+  getUser,
+  addUser,
+  completedTweet,
+  getAllUsers,
+  getAllTweets,
+  getUnseenTweets,
+  getScoreboard,
+  patchUser,
+  resetUser,
+  deleteUser,
+  getNumOfTweets
+};
