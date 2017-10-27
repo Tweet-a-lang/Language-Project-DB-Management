@@ -82,14 +82,12 @@ const getUnseenTweets = (req, res, next) => {
   const numOfTweets = +req.query.count || 5;
   let unseenTweets = [];
   const { username } = req.params;
-  console.log(username)
   return Promise.all([
     Users.findOne({ name: username }),
     Tweets.find()
   ])
     .then((data) => {
       const user = data[0];
-      console.log('#################', user)
       const tweets = data[1];
       const completedTweets = user.completedTweets;
 
@@ -140,7 +138,7 @@ const patchUser = (req, res, next) => {
       if (user === null) return next({ type: 400 });
 
       const newTweetsDone = [...user.completedTweets, ...tweetsDone];
-      const newScore = user.score + score;
+      const newScore = score;
       user.completedTweets = newTweetsDone;
       user.score = newScore;
 

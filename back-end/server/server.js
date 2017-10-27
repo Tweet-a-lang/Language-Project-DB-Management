@@ -22,13 +22,14 @@ mongoose.connect(config.url, {
     if(err) console.log('could not connect to the database');
   });
 
+app.use(cors());
+app.options('*', cors());
 app.get('/', (req, res) => {
   res.send('the root is working');
 });
 
 
 app.use(json());
-app.use(cors());
 
 app.use('/api', apiRouter);
 app.use('/dev', devRouter);
