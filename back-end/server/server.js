@@ -40,6 +40,7 @@ app.use('/*', (req, res, next) => {
 app.use((err, req, res, next) => {
   if(err.type === 400) return res.status(400).send({msg: 'invalid input'});
   else if(err.type === 404) return res.status(404).send({msg: 'sorry data not found'});
+  else if(err.type === 204) return res.status(204).send({msg: 'Server processed request but user is already deleted'});
   next(err);
 });
 
