@@ -19,11 +19,18 @@ function crawlTwitter(req, res) {
 
     let tweetPromiseArr = [];
 
-    Object.keys(topics).map((topic) => {
-        for (let i = 0; i < topics[topic].length; i++) {
-            tweetPromiseArr.push(T.get(`statuses/user_timeline`, { screen_name: topics[topic][i], count: tweetCount }));
-        }
-    })
+
+    for(key in topics) {
+        topics[key].forEach((topicHandle) => {
+            tweetPromiseArr.push(T.get(`statuses/user_timeline`, { screen_name: topicHandle, count: tweetCount }));
+        })
+    }
+
+    // Object.keys(topics).map((topic) => {
+    //     for (let i = 0; i < topics[topic].length; i++) {
+    //         tweetPromiseArr.push(T.get(`statuses/user_timeline`, { screen_name: topics[topic][i], count: tweetCount }));
+    //     }
+    // })
 
     Promise.all(tweetPromiseArr)
         .then((data) => {
