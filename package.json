@@ -7,7 +7,7 @@
     "test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json",
     "server:test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json &&  PORT=3100 mocha ./back-end/spec/server.spec.js",
     "start": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && node ./back-end/tweetAnalysis.js",
-    "server": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && node back-end/server/server.js",
+    "server": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && nodemon back-end/server/server.js",
     "server:seed-all": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && node ./back-end/seed/test.seed.js"
   },
   "keywords": [],
@@ -29,6 +29,8 @@
   "devDependencies": {
     "axios": "^0.17.0",
     "chai": "^4.1.2",
+    "eslint": "^4.9.0",
+    "eslint-plugin-react": "^7.4.0",
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
     "supertest": "^3.0.0"

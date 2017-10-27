@@ -13,22 +13,22 @@ function syntaxOfTweet(tweetText) {
     content: tweetText,
     type: 'PLAIN_TEXT',
     language: 'es'
-  }
+  };
 
   return language.analyzeSyntax({ document: document })
     .then(results => {
-
+    
       return results[0].tokens.map((word) => {
         return {
           word: word.text.content,
           type: word.partOfSpeech.tag
         };
-      })
+      });
     })
     .catch(err => {
       console.error('ERROR:', err);
     });
-};
+}
 
 function normaliseTweet(tweetObj) {
   let tweet = '';
@@ -47,7 +47,7 @@ function normaliseTweet(tweetObj) {
   return tweet.split(' ').filter((word) => {
     return !word.includes('#') && !word.includes('@') ? true : false;
   }).join(' ').trim();
-};
+}
 
 function selectWordType(arr, type) {
   //Must support fallback option if appropriate word is not available

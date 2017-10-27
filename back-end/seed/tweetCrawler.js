@@ -7,8 +7,29 @@ const T = new Twit({
     access_token_secret: process.env.ACCESS_TOKEN_SECRET
 });
 
-function crawlTwitter (req, res) {
-    res.send('Hello, I am a web crawler')
+const topics = {
+    // sport: [],
+    // news: [],
+    food: ['TastyFoodMx', 'GuerreroSagarpa', 'robinfood']
+}
+
+function crawlTwitter(req, res) {
+
+    const tweetCount = req.params.count || 5;
+
+    let tweetPromiseArr = [];
+
+    Object.keys(topics).map((topic) => {
+        for (let i = 0; i < topics[topic].length; i++) {
+            tweetPromiseArr.push(T.get(`statuses/user_timeline`, { screen_name: topics[topic][i], count: tweetCount }));
+        }
+    })
+
+    Promise.all(tweetPromiseArr)
+        .then((data) => {
+            res.send(data)
+        })
+
     //get topic-specific twitter handles
     //get # number of recent tweets
     //get all tweets from DB
