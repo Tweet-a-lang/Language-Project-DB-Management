@@ -31,6 +31,11 @@ const TweetDataSchema = new Schema({
   wordArr: {
     type: Schema.Types.Mixed,
     required: true
+  },
+  topic: {
+    type: String,
+    required: false,
+    default: 'misc'
   }
 });
 
