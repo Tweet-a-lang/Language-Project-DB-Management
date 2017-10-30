@@ -4,11 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json",
-    "server:test": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json &&  PORT=3100 mocha ./back-end/spec/server.spec.js",
-    "start": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && node ./back-end/tweetAnalysis.js",
-    "server": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && nodemon back-end/server/server.js",
-    "server:seed-all": "export GOOGLE_APPLICATION_CREDENTIALS=./back-end/keyfile.json && node ./back-end/seed/test.seed.js"
+    "db:seed-users-from-JSON": "export GOOGLE_APPLICATION_CREDENTIALS=./keyfile.json && usersFromJSON=1 node ./seeding/seedFromJSON.js",
+    "db:seed-tweets-from-JSON": "export GOOGLE_APPLICATION_CREDENTIALS=./keyfile.json && tweetsFromJSON=1 node ./seeding/seedFromJSON.js",
+    "db:seed-by-topic": "export GOOGLE_APPLICATION_CREDENTIALS=./keyfile.json && usersFromJSON=0 tweetsFromJSON=0 node ./seeding/seedByTopic.js"
   },
   "keywords": [],
   "author": "",
