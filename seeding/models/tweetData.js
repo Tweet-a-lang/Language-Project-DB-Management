@@ -26,16 +26,16 @@ const TweetDataSchema = new Schema({
     user_profile_image: {
       type: String,
       required: true
+    },
+    topic: {
+      type: String,
+      required: false,
+      default: 'misc'
     }
   },
   wordArr: {
     type: Schema.Types.Mixed,
     required: true
-  },
-  topic: {
-    type: String,
-    required: false,
-    default: 'misc'
   }
 });
 

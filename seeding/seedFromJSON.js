@@ -45,7 +45,7 @@ function vetTweets(newTweets) {
 
             const removedTweets = newTweets.length - filteredTweets.length;
             console.log(`Removed ${removedTweets} tweet${removedTweets === 1 ? '' : 's'} leaving ${filteredTweets.length} vetted tweets`);
-
+            // seedTweets(filteredTweets)
             seedDataBase(seedTweets(filteredTweets));
         });
 }
@@ -92,6 +92,7 @@ function joinTweetToSyntax(filteredSyntaxArr, normalisedTweets) {
 function seedTweets(vettedTweets) {
 
     return vettedTweets.map((tweet) => {
+        // console.log(tweet)
         return new Tweets(tweet).save();
     });
 }
