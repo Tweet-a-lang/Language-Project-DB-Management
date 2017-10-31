@@ -1,6 +1,6 @@
 module.exports = {
     food: [''], 
-    sport: [''], 
+    sport: ['SeFutbol'], 
     film: [''],  
-    news: ['muyinteresante']
+    news: ['']
 }

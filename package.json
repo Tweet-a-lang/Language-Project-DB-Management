@@ -6,7 +6,8 @@
   "scripts": {
     "db:seed-users-from-JSON": "export GOOGLE_APPLICATION_CREDENTIALS=./keyfile.json && usersFromJSON=1 node ./seeding/seedFromJSON.js",
     "db:seed-tweets-from-JSON": "export GOOGLE_APPLICATION_CREDENTIALS=./keyfile.json && tweetsFromJSON=1 node ./seeding/seedFromJSON.js",
-    "db:seed-by-topic": "export GOOGLE_APPLICATION_CREDENTIALS=./keyfile.json && usersFromJSON=0 tweetsFromJSON=0 node ./seeding/seedByTopic.js"
+    "db:seed-by-topic": "export GOOGLE_APPLICATION_CREDENTIALS=./keyfile.json && usersFromJSON=0 tweetsFromJSON=0 node ./seeding/seedByTopic.js",
+    "db:drop": "node ./seeding/dropDB.js"
   },
   "keywords": [],
   "author": "",

@@ -1,38 +1,38 @@
 [
     {
-        "name": "dennis",
-        "avatar": "https://avatars0.githubusercontent.com/u/30082843?s=460&v=4",
+        "name": "Daniel King",
+        "avatar": "https://pbs.twimg.com/profile_images/917363178102763521/2RjJojFk_400x400.jpg",
         "completedTweets": [],
         "score": 0
     },
     {
-        "name": "Josh",
-        "avatar": "https://avatars0.githubusercontent.com/u/30082843?s=460&v=4",
+        "name": "Daryl Carr",
+        "avatar": "https://pbs.twimg.com/profile_images/705346010554339328/vYP99VNp_400x400.jpg",
         "completedTweets": [],
-        "score": 100
+        "score": 37
     },
     {
-        "name": "Olie",
-        "avatar": "https://avatars0.githubusercontent.com/u/30082843?s=460&v=4",
+        "name": "Northcoders",
+        "avatar": "https://pbs.twimg.com/profile_images/668792792689344512/5P90PT8v_400x400.png",
         "completedTweets": [],
         "score": 53
     },
     {
-        "name": "Mustache",
-        "avatar": "https://avatars0.githubusercontent.com/u/30082843?s=460&v=4",
+        "name": "Johnny Rathbone",
+        "avatar": "https://pbs.twimg.com/profile_images/909063887596728323/3O9vzy1o_400x400.jpg",
         "completedTweets": [],
-        "score": 90000
+        "score": 36
     },
     {
-        "name": "Adie",
-        "avatar": "https://avatars0.githubusercontent.com/u/30082843?s=460&v=4",
+        "name": "Free Code Camp",
+        "avatar": "https://pbs.twimg.com/profile_images/692531829287567360/ytP7U362_400x400.png",
         "completedTweets": [],
         "score": 0
     },
     {
-        "name": "Steven",
+        "name": "@SinnedIsMyName",
         "avatar": "https://avatars0.githubusercontent.com/u/30082843?s=460&v=4",
         "completedTweets": [],
-        "score": 29
+        "score": 999
     }
 ]
