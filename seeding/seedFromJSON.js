@@ -46,6 +46,7 @@ function vetTweets(newTweets) {
             const removedTweets = newTweets.length - filteredTweets.length;
             console.log(`Removed ${removedTweets} tweet${removedTweets === 1 ? '' : 's'} leaving ${filteredTweets.length} vetted tweets`);
             // seedTweets(filteredTweets)
+            console.log(filteredTweets[0]);
             seedDataBase(seedTweets(filteredTweets));
         });
 }
@@ -146,7 +147,7 @@ function seedDataBase(tweets, users) {
 
                 Tweets.find().count()
                 .then(amount => {
-                    console.log(`Total of ${amount} users in DB`);
+                    console.log(`Total of ${amount} tweets in DB`);
                     mongoose.disconnect();
                 });
 
